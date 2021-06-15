@@ -1,0 +1,6 @@
+/.vscode
+/__pycache__
+/add_cron.sh
+/alarm.py
+/dateTrack.txt
+/logLoto.txt
