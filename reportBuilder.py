@@ -1,7 +1,7 @@
 import pandas as pd
 import requests
 import re
-import os
+import fileHandlerModule
 from bs4 import BeautifulSoup
 
 urls = ["https://www.loto.ro/jocuri/649_si_noroc/rezultate_extragere.html",
@@ -13,7 +13,7 @@ lotteryGames = ["6 DIN 49", "NOROC", "5 DIN 40", "SUPER NOROC", "JOKER", "PLUS N
 files = {"report": "logLoto.txt", "dateTrack": "dateTrack.txt"}
 
 def buildReport():
-    resetReport()
+    fileHandlerModule.resetReport()
     currentLotteryGameIndex = 0
     for url in urls:
        noroc = False
@@ -38,44 +38,15 @@ def buildReport():
             for result in tableResults:
                 info += str(result)
                 info += "\n"
-            saveToFile(info, files["report"])
+            fileHandlerModule.saveToFile(info, files["report"])
             currentLotteryGameIndex = currentLotteryGameIndex + 1
 
-    overWriteFile(str(extractionDate), files["dateTrack"])
+    fileHandlerModule.overWriteFile(str(extractionDate), files["dateTrack"])
 
 def removeLastLineDuplicates(table):
     cols = len(table)
     table[cols - 1] = list(dict.fromkeys(table[cols - 1]))
     return table
 
-def saveToFile(info, document):
-    savingFile = open(document, "a")
-    savingFile.write("\n")
-    savingFile.write(info)
-    savingFile.close()
-
-def overWriteFile(info, document):
-    owFile = open(document, "w")
-    owFile.write(info)
-    owFile.close()
-
-def getReport():
-    if checkIfFileIsEmpty("logLoto.txt"):
-        return "A aparut o eroare. Te rog sa mai incerci o data."
-    with open('logLoto.txt', 'r') as file:
-        data = file.read()
-    file.close()
-    return data
-
-def resetReport():
-    resetFile = open("logLoto.txt", "w")
-    resetFile.close()
-    resetChecker = open("dateTrack.txt", "w")
-    resetChecker.close()
-
-def checkIfFileIsEmpty(file):
-    return os.stat(file).st_size == 0
-
 if __name__ == "__main__":
     buildReport()
-

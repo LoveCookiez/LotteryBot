@@ -3,6 +3,7 @@ from telegram.ext import *
 from updateChecker import checkForUpdates
 import reportBuilder
 import credentials
+import fileHandlerModule
 
 token = credentials.telegram_bot_token
 updater = Updater(token, use_context=True)
@@ -11,7 +12,7 @@ dp = updater.dispatcher
 
 def results_command(update, context):
     update.message.reply_text("Verific rezultatele...")
-    report = reportBuilder.getReport()
+    report = fileHandlerModule.getReport()
     update.message.reply_text(report)
 
 #TODO finish check contact if in list and add it if not
@@ -24,7 +25,7 @@ def checkContact(update):
 def cron_job(context):
         if checkForUpdates():
             reportBuilder.buildReport()
-            report = reportBuilder.getReport()
+            report = fileHandlerModule.getReport()
             context.bot.send_message(148886443, report)
             context.bot.send_message(1352882699, report)
 
