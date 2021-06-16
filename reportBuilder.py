@@ -3,47 +3,45 @@ import requests
 import re
 import os
 from bs4 import BeautifulSoup
-from updateChecker import checkForUpdates
 
 urls = ["https://www.loto.ro/jocuri/649_si_noroc/rezultate_extragere.html",
         "https://www.loto.ro/jocuri/540_si_super_noroc/rezultate_extrageri.html",
         "https://www.loto.ro/jocuri/joker_si_noroc_plus/rezultate_extrageri.html"]
 
-jocuri = ["6 DIN 49", "NOROC", "5 DIN 40", "SUPER NOROC", "JOKER", "PLUS NOROC"]
+lotteryGames = ["6 DIN 49", "NOROC", "5 DIN 40", "SUPER NOROC", "JOKER", "PLUS NOROC"]
 
 files = {"report": "logLoto.txt", "dateTrack": "dateTrack.txt"}
 
 def buildReport():
     resetReport()
-    countJocuri = 0
+    currentLotteryGameIndex = 0
     for url in urls:
        noroc = False
        data = requests.get(url).text
        bs = BeautifulSoup(data, "lxml")
        for i in range(2):
             if (noroc):
-                numerele = bs.find('div', {"class": "numere-extrase-noroc"})
+                extractedLotteryNumbers = bs.find('div', {"class": "numere-extrase-noroc"})
             else:
-                numerele = bs.find('div', {"class": "numere-extrase"})
+                extractedLotteryNumbers = bs.find('div', {"class": "numere-extrase"})
                 noroc = True
 
-            numerele = re.findall(r'\d+', str(numerele))
-            dataExtragerii = bs.find('div', {"class": "button-open-details"})
-            for row in dataExtragerii:
-                ziua = re.findall(r'(?<=<span>)(.*)(?=</span>)', str(dataExtragerii))
-            r = requests.get(url)
-            tables = pd.read_html(r.text)
+            extractedLotteryNumbers = re.findall(r'\d+', str(extractedLotteryNumbers))
+            extractionDate = bs.find('div', {"class": "button-open-details"})
+            extractionDate = re.findall(r'(?<=<span>)(.*)(?=</span>)', str(extractionDate))
+            response = requests.get(url)
+            tables = pd.read_html(response.text)
             listNumber = tables[i]
             tableResults = listNumber.values.tolist()
             tableResults = removeLastLineDuplicates(tableResults)
-            info = "REZULTATE " + str(jocuri[countJocuri]) + str(ziua) + "\n" + "NUMERELE EXTRASE: "  + str(numerele) + "\n"
+            info = "REZULTATE " + str(lotteryGames[currentLotteryGameIndex]) + str(extractionDate) + "\n" + "NUMERELE EXTRASE: "  + str(extractedLotteryNumbers) + "\n"
             for result in tableResults:
                 info += str(result)
                 info += "\n"
             saveToFile(info, files["report"])
-            countJocuri = countJocuri + 1
+            currentLotteryGameIndex = currentLotteryGameIndex + 1
 
-    overWriteFile(str(ziua), files["dateTrack"])
+    overWriteFile(str(extractionDate), files["dateTrack"])
 
 def removeLastLineDuplicates(table):
     cols = len(table)
@@ -77,7 +75,6 @@ def resetReport():
 
 def checkIfFileIsEmpty(file):
     return os.stat(file).st_size == 0
-
 
 if __name__ == "__main__":
     buildReport()
