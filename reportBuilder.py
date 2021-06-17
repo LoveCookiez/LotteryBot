@@ -38,6 +38,7 @@ def buildReport():
             for result in tableResults:
                 info += str(result)
                 info += "\n"
+            info += "\n"
             fileHandlerModule.saveToFile(info, files["report"])
             currentLotteryGameIndex = currentLotteryGameIndex + 1
 
