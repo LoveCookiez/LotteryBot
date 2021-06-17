@@ -1,4 +1,3 @@
-import time
 import requests
 import re
 from bs4 import BeautifulSoup
@@ -11,19 +10,14 @@ def checkForUpdates():
     extractionDate = bs.find('div', {"class": "button-open-details"})
     day = str(re.findall(r'(?<=<span>)(.*)(?=</span>)',
 str(extractionDate)))
-    if updateRequired(day):
-        testFile = open("testFile.txt", "w")
-        testFile.write('aleluia')
-        return True
-    return False
-
+    return updateRequired(day)
 
 def updateRequired(dateFound):
     savedFile = open("dateTrack.txt", "r")
     lastDate = str(savedFile.read())
     savedFile.close()
-    formatedDate = formatDate(lastDate)
-    return (formatDate(dateFound) > formatedDate)
+    lastDate = formatDate(lastDate)
+    return (formatDate(dateFound) > lastDate)
 
 def formatDate(date):
     date = date.replace(".", "/")
