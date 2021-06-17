@@ -1,4 +1,6 @@
 import os
+
+files = {"report": "logLoto.txt", "dateTrack": "dateTrack.txt", "contacts": "contacts.txt"}
  
 def saveToFile(info, document):
     savingFile = open(document, "a")
@@ -45,3 +47,9 @@ def resetReport():
     resetFile.close()
     resetChecker = open("dateTrack.txt", "w")
     resetChecker.close()
+
+def initializeFiles():
+    for k,v in files.items():
+        if not os.path.exists(v):
+            open(v, 'a').close()
+            
