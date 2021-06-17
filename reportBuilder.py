@@ -10,7 +10,6 @@ urls = ["https://www.loto.ro/jocuri/649_si_noroc/rezultate_extragere.html",
 
 lotteryGames = ["6 DIN 49", "NOROC", "5 DIN 40", "SUPER NOROC", "JOKER", "PLUS NOROC"]
 
-files = {"report": "logLoto.txt", "dateTrack": "dateTrack.txt"}
 
 def buildReport():
     fileHandlerModule.resetReport()
@@ -39,10 +38,10 @@ def buildReport():
                 info += str(result)
                 info += "\n"
             info += "\n"
-            fileHandlerModule.saveToFile(info, files["report"])
+            fileHandlerModule.saveToFile(info, fileHandlerModule.files["report"])
             currentLotteryGameIndex = currentLotteryGameIndex + 1
 
-    fileHandlerModule.overWriteFile(str(extractionDate), files["dateTrack"])
+    fileHandlerModule.overWriteFile(str(extractionDate), fileHandlerModule.files["dateTrack"])
 
 def removeLastLineDuplicates(table):
     cols = len(table)
