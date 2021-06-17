@@ -1,8 +1,10 @@
 import os
-
+ 
 def saveToFile(info, document):
     savingFile = open(document, "a")
-    savingFile.write("\n")
+    if document == "contacts.txt":
+        if not isFileEmpty(document):
+            savingFile.write(",")
     savingFile.write(info)
     savingFile.close()
 
@@ -11,17 +13,27 @@ def overWriteFile(info, document):
     owFile.write(info)
     owFile.close()
 
+def getContactsList():
+    contactsFile = open("contacts.txt", "r")
+    contactsList = contactsFile.read().split(',')
+    contactsFile.close()
+        
+    return contactsList
+
+def addContact(contact):
+    saveToFile(contact, "contacts.txt")
+    
 def resetReport():
     resetFile = open("logLoto.txt", "w")
     resetFile.close()
     resetChecker = open("dateTrack.txt", "w")
     resetChecker.close()
 
-def checkIfFileIsEmpty(file):
+def isFileEmpty(file):
     return os.stat(file).st_size == 0
 
 def getReport():
-    if checkIfFileIsEmpty("logLoto.txt"):
+    if isFileEmpty("logLoto.txt"):
         return "A aparut o eroare. Te rog sa mai incerci o data."
     with open('logLoto.txt', 'r') as file:
         data = file.read()
