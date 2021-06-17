@@ -1,4 +1,3 @@
-import json
 from telegram.ext import *
 from updateChecker import checkForUpdates
 import reportBuilder
@@ -12,27 +11,29 @@ dp = updater.dispatcher
 
 def results_command(update, context):
     update.message.reply_text("Verific rezultatele...")
+    checkContact(update)
     report = fileHandlerModule.getReport()
     update.message.reply_text(report)
 
-#TODO finish check contact if in list and add it if not
 def checkContact(update):
-    update_info = str(update)
-    update_info = json.dumps(update_info)
-    update_info = json.loads(update_info)
-    contact = update_info["message"]["chat"]["id"]
+    contact = str(update.message.chat_id)
+    contactList = fileHandlerModule.getContactsList()
+    if contact not in contactList:
+        fileHandlerModule.addContact(contact)
 
 def cron_job(context):
-        if checkForUpdates():
-            reportBuilder.buildReport()
-            report = fileHandlerModule.getReport()
-            context.bot.send_message(148886443, report)
-            context.bot.send_message(1352882699, report)
+    if checkForUpdates():
+        reportBuilder.buildReport()
+        report = fileHandlerModule.getReport()
+        contactsList = fileHandlerModule.getContactsList()
+        for contact in contactsList:
+            context.bot.send_message(contact, report)
 
 def main():
     dp.add_handler(CommandHandler("rezultate", results_command))
-    job_queue.run_repeating(cron_job,interval=300,first=1.0)
+    job_queue.run_repeating(cron_job, interval=300, first=1.0)
     updater.start_polling()
     updater.idle()
+
 
 main()
