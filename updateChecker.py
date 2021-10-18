@@ -1,6 +1,7 @@
 import requests
 import re
 from bs4 import BeautifulSoup
+from datetime import datetime
 
 url = "https://www.loto.ro/jocuri/649_si_noroc/rezultate_extragere.html"
 
@@ -17,7 +18,8 @@ def updateRequired(dateFound):
     lastDate = str(savedFile.read())
     savedFile.close()
     lastDate = formatDate(lastDate)
-    return (formatDate(dateFound) > lastDate)
+    return datetime.strptime(formatDate(dateFound), "['%d/%m/%Y']") > datetime.strptime(lastDate, "['%d/%m/%Y']")
+    #return (formatDate(dateFound) > lastDate)
 
 def formatDate(date):
     date = date.replace(".", "/")
