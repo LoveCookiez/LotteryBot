@@ -4,9 +4,9 @@ import re
 import fileHandlerModule
 from bs4 import BeautifulSoup
 
-urls = ["https://www.loto.ro/jocuri/649_si_noroc/rezultate_extragere.html",
-        "https://www.loto.ro/jocuri/540_si_super_noroc/rezultate_extrageri.html",
-        "https://www.loto.ro/jocuri/joker_si_noroc_plus/rezultate_extrageri.html"]
+urls = ["https://www.loto.ro/loto-new/newLotoSiteNexioFinalVersion/web/app2.php/jocuri/649_si_noroc/rezultate_extragere.html",
+        "https://www.loto.ro/loto-new/newLotoSiteNexioFinalVersion/web/app2.php/jocuri/joker_si_noroc_plus/rezultate_extrageri.html",
+        "https://www.loto.ro/loto-new/newLotoSiteNexioFinalVersion/web/app2.php/jocuri/540_si_super_noroc/rezultate_extrageri.html"]
 
 lotteryGames = ["6 DIN 49", "NOROC", "5 DIN 40", "SUPER NOROC", "JOKER", "PLUS NOROC"]
 
